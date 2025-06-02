@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+    <!-- Configuración de la versión base de Spring Boot -->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.4.4</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+    <!-- Información general del proyecto -->
+	<groupId>com.fish_diseases</groupId>
+	<artifactId>api_gateway</artifactId>
+	<version>0.0.1</version>
+	<name>api-gateway</name>
+	<description>Puerta de enlace para los microservicios de fish-diseases</description>
+
+    <!-- Propiedades generales del proyecto -->
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+    
+    <!-- Dependencias necesarias para el microservicio -->
+	<dependencies>
+       <!-- Seguridad: autenticación y autorización con Spring Security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+        <!-- Spring Security reactivo -->
+        <dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+
+        <!-- Herramientas de desarrollo -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+
+        <!-- Lombok para reducir boilerplate code -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+    
+        <!-- Swagger UI y documentación OpenAPI para proyectos basados en Spring MVC -->
+		<dependency>
+    		<groupId>org.springdoc</groupId>
+    		<artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+    		<version>2.8.6</version>
+		</dependency>
+		
+		<!-- Dependencia para Spring Cloud Gateway -->
+		<dependency>
+    		<groupId>org.springframework.cloud</groupId>
+    		<artifactId>spring-cloud-starter-gateway</artifactId>
+		</dependency>
+
+		<!-- Soporte para recursos protegidos con JWT en Spring Security -->
+		<dependency>
+  			<groupId>org.springframework.security</groupId>
+  			<artifactId>spring-security-oauth2-resource-server</artifactId>
+		</dependency>
+		
+		<!-- Utilidades JOSE (JWT, JWS, JWE) necesarias para trabajar con tokens firmados -->
+		<dependency>
+  			<groupId>org.springframework.security</groupId>
+  			<artifactId>spring-security-oauth2-jose</artifactId>
+		</dependency>
+
+        <!-- Dependencias para testing -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+        
+		<!-- JUnit 5 -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Suite de tests -->
+		<dependency>
+    		<groupId>org.junit.platform</groupId>
+    		<artifactId>junit-platform-suite</artifactId>
+    		<scope>test</scope>
+		</dependency>
+
+		<!-- Jackson for parsing -->
+		<dependency>
+  			<groupId>com.fasterxml.jackson.core</groupId>
+  			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+        <!-- Extensiones para pruebas de seguridad con Spring Security -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+        <!-- Biblioteca para generación y validación de tokens JWT -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.12.6</version>
+        </dependency>
+        
+		<!-- Procesador de configuración para que Spring detecte y valide las propiedades personalizadas definidas con @ConfigurationProperties -->
+        <dependency>
+        	<groupId>org.springframework.boot</groupId>
+        	<artifactId>spring-boot-configuration-processor</artifactId>
+        	<optional>true</optional>
+        </dependency>
+	</dependencies>
+
+	<dependencyManagement>
+    	<dependencies>
+        	<dependency>
+            	<groupId>org.springframework.cloud</groupId>
+            	<artifactId>spring-cloud-dependencies</artifactId>
+            	<version>2024.0.1</version>
+            	<type>pom</type>
+            	<scope>import</scope>
+        	</dependency>
+    	</dependencies>
+	</dependencyManagement>
+
+    <!-- Configuración de plugins de construcción -->
+ 	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+
+            <!-- Plugin de Spring Boot para empaquetado y ejecución de la aplicación -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+            <!-- Plugin de source para construcción de tests -->
+    		<plugin>
+      			<groupId>org.apache.maven.plugins</groupId>
+      			<artifactId>maven-surefire-plugin</artifactId>
+      			<configuration>
+        			<includes>
+          				<include>**/ApiGatewayApplicationTests.java</include>
+        			</includes>
+      			</configuration>
+    		</plugin>
+
+		</plugins>
+	</build>
+
+</project>

@@ -1,0 +1,149 @@
+services:
+
+  # Servicio de Autenticación con MySQL
+  auth-service:
+    container_name: "auth_container"
+    build: AuthService/auth-service
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./AuthService:/app
+      - maven-repo:/root/.m2
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      authdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  authdb:
+    container_name: "authdb"
+    image: "mysql"
+    ports:
+      - "3307:3306"
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "authdb", "-u", "${MYSQL_ROOT_USERNAME}", "-p${MYSQL_ROOT_PASSWORD}"]
+      timeout: 10s
+      retries: 10
+      
+  # Servicio de Biodata con PostgreSQL
+  biodata-service:
+    container_name: "biodata_container"
+    build: BiodataService/biodata-service
+    ports:
+      - "9999:9999"
+    volumes:
+      - ./BiodataService:/app
+      - maven-repo:/root/.m2
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      biodatadb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:9999/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  biodatadb:
+    container_name: "biodatadb"
+    image: "postgres:16.1"
+    platform: linux/amd64
+    ports:
+      - "5434:5432"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${BIODATA_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${BIODATA_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${BIODATA_POSTGRES_DB}
+    restart: always
+    volumes:
+      - biodata-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${BIODATA_POSTGRES_USER} -d ${BIODATA_POSTGRES_DB}"]
+      timeout: 10s
+      retries: 10
+      
+  # Servicio de Tratamientos con PostgreSQL
+  treatment-service:
+    container_name: "treatment_container"
+    build: TreatmentService/treatment-service
+    ports:
+      - "7777:7777"
+    volumes:
+      - ./TreatmentService:/app
+      - maven-repo:/root/.m2
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      treatmentdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:7777/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  treatmentdb:
+    container_name: "treatmentdb"
+    image: "postgres:16.1"
+    platform: linux/amd64
+    ports:
+      - "5433:5432"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${TREATMENT_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${TREATMENT_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${TREATMENT_POSTGRES_DB}
+    restart: always
+    volumes:
+      - treatment-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${TREATMENT_POSTGRES_USER} -d ${TREATMENT_POSTGRES_DB}"]
+      timeout: 10s
+      retries: 10
+
+  # Servicio de API Gateway
+  gateway-service:
+    container_name: "gateway_container"
+    build: ApiGateway/api-gateway
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./ApiGateway:/app
+      - maven-repo:/root/.m2
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      auth-service:
+        condition: service_healthy
+      biodata-service:
+        condition: service_healthy
+      treatment-service:
+        condition: service_healthy
+
+    
+volumes:
+  mysql-data:
+  biodata-data:
+  treatment-data:
+  maven-repo:

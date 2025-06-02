@@ -1,0 +1,33 @@
+method,uri,role,params,expectedStatus
+GET,/biodata-service/fishes,USER,-,200
+GET,/biodata-service/fishes,TREATMENT,-,200
+GET,/biodata-service/fishes,ADMIN,-,200
+GET,/biodata-service/fishes/1,USER,fishId:1,200
+GET,/biodata-service/fishes/9999,USER,fishId:9999,404
+GET,/biodata-service/fishes/1,TREATMENT,fishId:1,200
+GET,/biodata-service/fishes/9999,TREATMENT,fishId:9999,404
+GET,/biodata-service/fishes/1,ADMIN,fishId:1,200
+GET,/biodata-service/fishes/9999,ADMIN,fishId:9999,404
+GET,/biodata-service/fishes/sn/Testus fishus,USER,scientificName:Testus fishus,200
+GET,/biodata-service/fishes/sn/Unknownus nonexistus,USER,scientificName:Unknownus nonexistus,404
+GET,/biodata-service/fishes/sn/Testus fishus,TREATMENT,scientificName:Testus fishus,200
+GET,/biodata-service/fishes/sn/Unknownus nonexistus,TREATMENT,scientificName:Unknownus nonexistus,404
+GET,/biodata-service/fishes/sn/Testus fishus,ADMIN,scientificName:Testus fishus,200
+GET,/biodata-service/fishes/sn/Unknownus nonexistus,ADMIN,scientificName:Unknownus nonexistus,404
+GET,/biodata-service/fishes/fetch/Testus fishus,USER,-,401
+GET,/biodata-service/fishes/fetch/Testus fishus,TREATMENT,-,403
+GET,/biodata-service/fishes/fetch/Sparus aurata,ADMIN,scientificName:Sparus aurata,200
+GET,/biodata-service/fishes/fetch/Unknownus nonexistus,ADMIN,scientificName:Unknownus nonexistus,404
+POST,/biodata-service/fishes,USER,-,401
+POST,/biodata-service/fishes,TREATMENT,-,403
+POST,/biodata-service/fishes,ADMIN,complete data,201
+POST,/biodata-service/fishes,ADMIN,incomplete data,400
+POST,/biodata-service/fishes,ADMIN,data exists,409
+PATCH,/biodata-service/fishes/Testus fishus,USER,-,401
+PATCH,/biodata-service/fishes/Testus fishus,TREATMENT,-,403
+PATCH,/biodata-service/fishes/Testus fishus,ADMIN,complete data,200
+PATCH,/biodata-service/fishes/Unknownus nonexistus,ADMIN,scientificName:Unknownus nonexistus,404
+DELETE,/biodata-service/fishes/Testus fishus,USER,-,401
+DELETE,/biodata-service/fishes/Testus fishus,TREATMENT,-,403
+DELETE,/biodata-service/fishes/Testus fishus,ADMIN,scientificName:Testus fishus,200
+DELETE,/biodata-service/fishes/Unknownus nonexistus,ADMIN,scientificName:Unknownus nonexistus,404

@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: api-gateway
+  main:
+    web-application-type: reactive
+    allow-bean-definition-overriding: true
+  config:
+    import: optional:env.properties
+  jackson:
+    default-property-inclusion: NON_NULL
+
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: ${microservicios.auth.url}
+          predicates:
+            - Path=/auth-service/**
+          filters:
+            - StripPrefix=1
+
+        - id: auth-service-docs
+          uri: ${microservicios.auth.url}
+          predicates:
+            - Path=/v3/api-docs/auth-service
+          filters:
+            - RewritePath=/v3/api-docs/auth-service, /v3/api-docs
+
+        - id: biodata-service
+          uri: ${microservicios.biodata.url}
+          predicates:
+            - Path=/biodata-service/**
+          filters:
+            - StripPrefix=1
+
+        - id: biodata-service-docs
+          uri: ${microservicios.biodata.url}
+          predicates:
+            - Path=/v3/api-docs/biodata-service
+          filters:
+            - RewritePath=/v3/api-docs/biodata-service, /v3/api-docs
+
+        - id: treatment-service
+          uri: ${microservicios.treatment.url}
+          predicates:
+            - Path=/treatment-service/**
+          filters:
+            - StripPrefix=1
+
+        - id: treatment-service-docs
+          uri: ${microservicios.treatment.url}
+          predicates:
+            - Path=/v3/api-docs/treatment-service
+          filters:
+            - RewritePath=/v3/api-docs/treatment-service, /v3/api-docs
+
+server:
+  port: 9000
+
+microservicios:
+  auth:
+    url: http://auth-service:8888
+  biodata:
+    url: http://biodata-service:9999
+  treatment:
+    url: http://treatment-service:7777
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
+    org.springframework.web: DEBUG
+
+jwt:
+  secret: ${AUTH_JWT_SECRET}
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    operationsSorter: method
+    doc-expansion: list
+    path: /swagger-ui.html
+    urls:
+      - name: Autenticación
+        url: /v3/api-docs/auth-service
+      - name: Biodata
+        url: /v3/api-docs/biodata-service
+      - name: Tratamientos
+        url: /v3/api-docs/treatment-service
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  cache:
+    disabled: true
+

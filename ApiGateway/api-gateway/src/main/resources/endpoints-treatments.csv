@@ -1,0 +1,29 @@
+method,uri,role,params,expectedStatus
+GET,/treatment-service/treatments,USER,-,401
+GET,/treatment-service/treatments,TREATMENT,-,200
+GET,/treatment-service/treatments,ADMIN,-,200
+GET,/treatment-service/treatments/1,USER,id:1,401
+GET,/treatment-service/treatments/9999,USER,id:9999,401
+GET,/treatment-service/treatments/1,TREATMENT,id:1,200
+GET,/treatment-service/treatments/9999,TREATMENT,id:9999,404
+GET,/treatment-service/treatments/1,ADMIN,id:1,200
+GET,/treatment-service/treatments/9999,ADMIN,id:9999,404
+GET,/treatment-service/treatments/name/Tratamiento Test,USER,name:Tratamiento Test,401
+GET,/treatment-service/treatments/name/Unknown Treatment,USER,name:UnknownTreatment,401
+GET,/treatment-service/treatments/name/Tratamiento Test,TREATMENT,name:Tratamiento Test,200
+GET,/treatment-service/treatments/name/Unknown Treatment,TREATMENT,name:UnknownTreatment,404
+GET,/treatment-service/treatments/name/Tratamiento Test,ADMIN,name:Tratamiento Test,200
+GET,/treatment-service/treatments/name/Unknown Treatment,ADMIN,name:UnknownTreatment,404
+POST,/treatment-service/treatments,USER,-,401
+POST,/treatment-service/treatments,TREATMENT,-,403
+POST,/treatment-service/treatments,ADMIN,complete data,201
+POST,/treatment-service/treatments,ADMIN,incomplete data,400
+POST,/treatment-service/treatments,ADMIN,data exists,409
+PATCH,/treatment-service/treatments/1,USER,-,401
+PATCH,/treatment-service/treatments/1,TREATMENT,-,403
+PATCH,/treatment-service/treatments/1,ADMIN,complete data,200
+PATCH,/treatment-service/treatments/1,ADMIN,incomplete data,400
+DELETE,/treatment-service/treatments/1,USER,-,401
+DELETE,/treatment-service/treatments/1,TREATMENT,-,403
+DELETE,/treatment-service/treatments/1,ADMIN,id:1,200
+DELETE,/treatment-service/treatments/9999,ADMIN,id:9999,404

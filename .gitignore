@@ -1,0 +1,33 @@
+# === Java / Maven ===
+target/
+*.log
+*.class
+*.jar
+*.war
+
+# === Configuración Maven Wrapper ===
+.mvn/
+!**/mvnw
+!**/mvnw.cmd
+
+# === Eclipse / STS ===
+*.iml
+.project
+.classpath
+.settings/
+
+# === IDEs ===
+.idea/
+.vscode/
+
+# === Docker ===
+docker-images/
+*.tar
+
+# === Sistema ===
+.DS_Store
+Thumbs.db
+
+# === Archivos de entorno (opcional) ===
+.env
+*.env

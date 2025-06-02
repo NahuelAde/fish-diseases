@@ -1,0 +1,54 @@
+method,uri,role,params,expectedStatus
+GET,/auth-service/users,USER,-,401
+GET,/auth-service/users,TREATMENT,-,403
+GET,/auth-service/users,ADMIN,-,200
+GET,/auth-service/users/2,USER,-,401
+GET,/auth-service/users/9999,USER,-,401
+GET,/auth-service/users/2,TREATMENT,userId:2,200
+GET,/auth-service/users/3,TREATMENT,userId:3,403
+GET,/auth-service/users/1,ADMIN,userId:1,200
+GET,/auth-service/users/2,ADMIN,userId:1,200
+GET,/auth-service/users/9999,ADMIN,userId:1,404
+POST,/auth-service/users/register,USER,complete data,201
+POST,/auth-service/users/register,USER,incomplete data,400
+POST,/auth-service/users/register,USER,data exists,409
+POST,/auth-service/users/register,TREATMENT,data exists treatment,409
+POST,/auth-service/users/register,ADMIN,data exists admin,409
+POST,/auth-service/users/login,USER,-,401
+POST,/auth-service/users/login,TREATMENT,treatment+pass,200
+POST,/auth-service/users/login,TREATMENT,incomplete data,401
+POST,/auth-service/users/login,ADMIN,admin+pass,200
+POST,/auth-service/users/login,ADMIN,incomplete data,401
+POST,/auth-service/users/logout,USER,-,401
+POST,/auth-service/users/logout,TREATMENT,-,200
+POST,/auth-service/users/logout,ADMIN,-,200
+PATCH,/auth-service/users/1,USER,-,401
+POST,/auth-service/users/login,TREATMENT,treatment+pass,200
+POST,/auth-service/users/login,ADMIN,admin+pass,200
+PATCH,/auth-service/users/2,TREATMENT,userId:2,200
+PATCH,/auth-service/users/2,TREATMENT,incomplete data,400
+PATCH,/auth-service/users/1,TREATMENT,userId:2,403
+PATCH,/auth-service/users/9999,TREATMENT,userId:2,404
+PATCH,/auth-service/users/1,ADMIN,userId:1,200
+PATCH,/auth-service/users/2,ADMIN,userId:1,200
+PATCH,/auth-service/users/9999,ADMIN,userId:1,404
+PUT,/auth-service/users/1/role-admin,USER,-,401
+PUT,/auth-service/users/1/role-admin,TREATMENT,userId:2,403
+PUT,/auth-service/users/1/role-admin,ADMIN,userId:1,403
+PUT,/auth-service/users/2/role-admin,ADMIN,userId:1,200
+PUT,/auth-service/users/2/role-admin,ADMIN,userId:1,200
+PUT,/auth-service/users/9999/role-admin,ADMIN,userId:1,404
+PUT,/auth-service/users/2/disable,USER,-,401
+PUT,/auth-service/users/2/disable,TREATMENT,userId:3,403
+PUT,/auth-service/users/3/disable,TREATMENT,userId:3,200
+PUT,/auth-service/users/3/disable,TREATMENT,userId:3,403
+PUT,/auth-service/users/1/disable,ADMIN,userId:1,200
+PUT,/auth-service/users/1/disable,ADMIN,userId:1,200
+PUT,/auth-service/users/3/disable,ADMIN,userId:1,200
+PUT,/auth-service/users/9999/disable,ADMIN,userId:1,404
+DELETE,/auth-service/users/2,USER,-,401
+DELETE,/auth-service/users/2,TREATMENT,-,403
+DELETE,/auth-service/users/3,ADMIN,userId:1,400
+PUT,/auth-service/users/3/disable,ADMIN,userId:1,200
+DELETE,/auth-service/users/3,ADMIN,userId:1,200
+DELETE,/auth-service/users/9999,ADMIN,userId:1,404
