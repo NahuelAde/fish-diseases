@@ -29,10 +29,6 @@ docker-images/
 .DS_Store
 Thumbs.db
 
-# === Variables de entorno ===
-.env
-*.env
-
 # === Archivos grandes específicos (excluidos manualmente) ===
-TreatmentService/PostgreSQL/17/pgAdmin\ 4/runtime/pgAdmin4.exe
+TreatmentService/PostgreSQL/17/
 BiodataService/MongoDB/Server/8.0/data/
